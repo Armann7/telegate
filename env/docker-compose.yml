@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  telegate:
+    image: armann/telegate:latest
+    container_name: telegate
+    user: '1001:1001'
+    cap_drop:
+      - ALL
+    environment:
+      BOT_TOKEN:
+      API_ID:
+      API_HASH:
+      GOOGLE_API_KEY:
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/telegate

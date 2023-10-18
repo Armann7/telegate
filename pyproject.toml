@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "telegate"
+version = "0.1.0"
+description = ""
+authors = ["Vyacheslav Kuzmin <vyacheslav.v.kuzmin@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiogram = "^3.1.1"
+pytest = "^7.4.2"
+fastapi = "^0.103.2"
+uvicorn = "^0.23.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
