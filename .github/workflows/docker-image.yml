@@ -14,6 +14,6 @@ jobs:
     - name: Build the Docker image
       run: | 
         docker build --no-cache -f env/Dockerfile -t armann7/telegate .
-        docker login --username DOCKERHUB_USERNAME --password DOCKERHUB_KEY
+        docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_KEY
         docker tag latest armann7/telegate
         docker push armann7/telegate
