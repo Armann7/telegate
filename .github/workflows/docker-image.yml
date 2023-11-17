@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: | 
+        docker build --no-cache -f env/Dockerfile -t armann7/telegate .
+        docker login --username DOCKERHUB_USERNAME --password DOCKERHUB_KEY
+        docker tag latest armann7/telegate
+        docker push armann7/telegate
