@@ -14,10 +14,11 @@ RUN pip install --user -r requirements.txt
 FROM python:3.11-slim
 LABEL maintainer="vyacheslav.v.kuzmin@gmail.com"
 ENV MAIN=/app
+ENV TELEGATE_DATA=/data
 
 # Create user and group
-RUN groupadd -g 3990 appgroup && useradd -u 3990 --gid appgroup -ms /bin/bash appuser
-RUN mkdir $MAIN && chown -R appuser:appgroup $MAIN
+RUN groupadd appgroup && useradd --gid appgroup -ms /bin/bash appuser
+RUN mkdir $MAIN && chown -R appuser:appgroup $MAIN && mkdir $TELEGATE_DATA && chown -R appuser:appgroup $TELEGATE_DATA
 
 USER appuser
 # update environment variables
@@ -29,6 +30,5 @@ ENV TZ=Europe/Belgrade
 COPY --from=builder --chown=appuser:appgroup /home/appuser/.local /home/appuser/.local
 WORKDIR $MAIN
 COPY --chown=appuser:appgroup *.py ./
-RUN mkdir -p /home/appuser/telegate
 
-CMD [ "python", "main.py" ]
+ENTRYPOINT [ "python", "main.py" ]

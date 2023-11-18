@@ -2,16 +2,11 @@ version: "3.8"
 
 services:
   telegate:
-    image: armann/telegate:latest
+    image: armann7/telegate:latest
     container_name: telegate
-    user: '1001:1001'
-    cap_drop:
-      - ALL
+    user: "${USER_ID}:${GROUP_ID}"
     environment:
       BOT_TOKEN:
-      API_ID:
-      API_HASH:
-      GOOGLE_API_KEY:
     restart: unless-stopped
     deploy:
       resources:
@@ -24,4 +19,4 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./data:/telegate
+      - ./data:/data
