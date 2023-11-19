@@ -1,6 +1,7 @@
 import asyncio
 import logging
 
+from aiogram.utils import formatting
 from fastapi import APIRouter
 from fastapi import FastAPI
 from starlette.requests import Request
@@ -31,13 +32,24 @@ class Api:
         Format of receiver:
             started with @ - username
             otherwise - group or channel name
+        Format of body:
+            The first line - is a title
+            The rest - is a message
         """
         if not receiver.startswith('@'):
             receiver = '#' + receiver
         body = await request.body()
         body_decoded = body.decode('utf8')
+        lines = body_decoded.splitlines()
         _logger.debug(f"Got a message for {receiver}. Body:\n{body_decoded!r}")
-        await self._gram.send(receiver, body_decoded)
+        if len(lines) == 0:
+            _logger.debug("Empty body")
+            return
+        if len(lines) > 1:
+            msg = formatting.as_section(lines[0].strip(), '\n'.join(lines[1:]))
+        else:
+            msg = formatting.Text(body_decoded)
+        await self._gram.send(receiver, msg)
 
 
 _logger = logging.getLogger(__name__)

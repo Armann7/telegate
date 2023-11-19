@@ -1,3 +1,3 @@
-curl -d '{"receiver": "@cosimu", "body": "Hey!"}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/api/message
-curl -d '{"receiver": "#Monitoring", "body": "It is an impossible event"}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/api/message
+curl -d 'test data' -H "Content-Type: text/plain" -X POST http://127.0.0.1:5000/api/message/@cosimu
+curl -d 'It is an impossible event' -H "Content-Type: text/plain" -X POST http://127.0.0.1:5000/api/message/Monitoring
 
