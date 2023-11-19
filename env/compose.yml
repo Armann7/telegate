@@ -3,6 +3,7 @@ version: "3.8"
 services:
   telegate:
     image: armann7/telegate:latest
+    pull_policy: always
     container_name: telegate
     user: "${USER_ID}:${GROUP_ID}"
     environment:

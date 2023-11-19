@@ -20,6 +20,7 @@ class Gram:
         self._router = Router()
         self._dp.include_router(self._router)
         self._router.message.register(self.message_handler)
+        self._router.channel_post.register(self.message_handler)
 
     async def connect(self):
         await self._bot.delete_webhook(drop_pending_updates=True)
@@ -31,16 +32,15 @@ class Gram:
             raise ReceiverNotFound(f'Receiver {receiver} not found')
         await self._bot.send_message(self._idm[receiver], msg)
 
-    # @router.message()
     async def message_handler(self, msg: Message):
         _logger.debug(f"Got a message '{msg!r}'")
-        if msg.from_user.id:
+        if msg.from_user is not None:
             self._idm[f'@{msg.from_user.username}'] = msg.from_user.id
             _logger.debug(f"Add the user name '{msg.from_user.username}'")
-        if msg.chat.id and msg.chat.id < 0:
+        if msg.chat is not None and msg.chat.id < 0:
             self._idm[f'#{msg.chat.full_name}'] = msg.chat.id
-        _logger.debug(f"Add the group name '{msg.chat.full_name}'")
-        if msg.chat.id and msg.chat.id > 0:
+        _logger.debug(f"Add the group/channel name '{msg.chat.full_name}'")
+        if msg.chat is not None and msg.chat.id > 0:
             self._idm[f'@{msg.chat.username}'] = msg.chat.id
             _logger.debug(f"Add the user name '{msg.chat.username}'")
         self._idm.save()
