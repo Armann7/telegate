@@ -6,7 +6,7 @@ USER appuser
 
 # install dependencies to the local user directory
 ENV PATH=/home/appuser/.local:/home/appuser/.local/bin:$PATH
-COPY requirements.txt .
+COPY ../requirements.txt .
 RUN python -m pip install --upgrade pip --disable-pip-version-check
 RUN pip install --user -r requirements.txt
 
