@@ -1,6 +1,6 @@
 import pytest
 
-from identity_manager import IdentityManager
+from src.identity_manager import IdentityManager
 
 
 @pytest.mark.parametrize('test_data', [{'@username1': '111', '@username2': '222', 'Channel 1': '001', 'Channel 2': '002'}])

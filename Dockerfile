@@ -29,6 +29,6 @@ ENV TZ=Europe/Belgrade
 
 COPY --from=builder --chown=appuser:appgroup /home/appuser/.local /home/appuser/.local
 WORKDIR $MAIN
-COPY --chown=appuser:appgroup *.py ./
+COPY --chown=appuser:appgroup src/* ./
 
 ENTRYPOINT [ "python", "main.py" ]
