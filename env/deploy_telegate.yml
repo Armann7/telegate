@@ -1,0 +1,62 @@
+---
+- hosts: server_group
+  become: yes
+  vars:
+    - src_project_home: /home/red/work/telegate
+    - tgt_home: /mnt/operational/containers/telegate
+
+  tasks:
+  - name: stop telegate
+    shell: docker stop telegate
+    ignore_errors: yes
+  
+  - name: remove old container
+    shell: docker rm telegate
+    ignore_errors: yes
+
+  - name: Add the user 'telegate'
+    ansible.builtin.user:
+      name: telegate
+      create_home: no
+
+  - name: Create the main directory
+    ansible.builtin.file:
+      path: "{{ tgt_home }}"
+      state: directory
+      owner: telegate
+      group: telegate
+
+  - name: Create the data directory
+    ansible.builtin.file:
+      path: "{{ tgt_home }}/data"
+      state: directory
+      owner: telegate
+      group: telegate
+
+  - name: Copy compose
+    ansible.builtin.copy:
+      src: "{{ src_project_home }}/env/compose.yml"
+      dest: "{{ tgt_home }}/compose.yml"
+      force: yes
+      owner: telegate
+      group: telegate
+
+  - name: Copy .env
+    ansible.builtin.copy:
+      src: "{{ src_project_home }}/.env"
+      dest: "{{ tgt_home }}/.env"
+      force: yes
+      owner: telegate
+      group: telegate
+
+  - name: Export variables
+    shell: |
+      "export $(xargs <{{ tgt_home }}/.env)"
+      export USER_ID="$(id -u telegate)"
+      export GROUP_ID="$(id -g telegate)"
+
+  - name: Login to Docker Hub
+    shell: "docker login --username {{ lookup('ansible.builtin.env', 'DOCKERHUB_LOGIN') }} --password {{ lookup('ansible.builtin.env', 'DOCKERHUB_TOKEN') }}"
+
+  - name: Create the container
+    shell: "docker compose -f {{ tgt_home }}/compose.yml up -d --force-recreate"
